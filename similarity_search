@@ -1,0 +1,30 @@
+#!/bin/bash
+if (( $(echo "$# < 2" | bc -l) )); then
+  clear
+  echo USAGE:    similarity_search     PATH_TO_mol2_FILES    res.csv
+
+exit
+fi
+com=,
+fline=ligand
+
+mol2path=$1
+
+for k in $ligpath*.smi
+        do
+        fline=$fline$com$k
+done
+echo $fline are the lead
+echo $fline>$2
+
+for i in $1/*.mol2
+        do
+        res=$i
+        for j in *.smi
+                do
+                tmp=`babel $j $i -ofpt|grep Tanimoto|awk -F '=' {'print $2'}`
+                res=$res$com$tmp
+                echo $res
+        done
+        echo $res>>$2
+done
